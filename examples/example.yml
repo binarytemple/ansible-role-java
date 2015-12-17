@@ -1,0 +1,4 @@
+- hosts: examples
+  sudo: True
+  roles:
+  - { role: binarytemple.java, tags: ["java"] }

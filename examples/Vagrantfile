@@ -1,0 +1,52 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+VAGRANTFILE_API_VERSION = "2"
+
+#if [ "up", "provision" ].include?(ARGV.first) && File.directory?("roles") &&
+#  !(File.directory?("roles/binarytemple.java") || File.symlink?("roles/basho.riak-common"))
+#  system("ansible-galaxy install -r roles.txt -p roles --ignore-errors")
+#end
+
+# Grab local IP address for the proxy
+def local_ip
+  @local_ip ||= begin
+    orig, Socket.do_not_reverse_lookup = Socket.do_not_reverse_lookup, true
+
+    UDPSocket.open do |s|
+      s.connect "64.233.187.99", 1
+      s.addr.last
+    end
+  ensure
+    Socket.do_not_reverse_lookup = orig
+  end
+end
+
+$platform = ENV["TEST_OS"]
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |cluster|
+  
+  cluster.vm.box = if $platform == "UBUNTU"
+    "bento/ubuntu-12.04"
+  elsif $platform == "CENTOS"
+    "chef/centos-6.5"
+  elsif $platform == "DEBIAN"
+    "chef/debian-7.4"
+  else
+    "bento/ubuntu-12.04"
+  end
+
+  cluster.vm.define "example" do |machine|
+      machine.vm.hostname = "example"
+      machine.vm.network "private_network", ip: "10.42.0.6"
+
+      machine.vm.provision "ansible" do |ansible|
+        ansible.playbook = "./example.yml"
+        ansible.inventory_path = "./hosts"
+        ansible.raw_arguments = [ "--timeout=60" ]
+        
+        ansible.verbose = "vvvv"
+        ansible.limit = "all"
+      end
+  end
+end
