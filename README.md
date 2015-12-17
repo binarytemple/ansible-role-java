@@ -25,7 +25,7 @@ None.
 
     - hosts: servers
       roles:
-        - { role: geerlingguy.java }
+        - { role: binarytemple.java }
 
 ## License
 

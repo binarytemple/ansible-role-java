@@ -2,9 +2,9 @@
 dependencies: []
 
 galaxy_info:
-  author: geerlingguy
+  author: binarytemple 
   description: Java for Linux
-  company: "Midwestern Mac, LLC"
+  company: "binarytemple"
   license: "license (BSD, MIT)"
   min_ansible_version: 1.4
   platforms:
