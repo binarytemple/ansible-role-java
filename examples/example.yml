@@ -1,4 +1,7 @@
-- hosts: examples
-  sudo: True
+---
+- hosts: all
+  sudo: yes
   roles:
-  - { role: binarytemple.java, tags: ["java"] }
+  - { role: binarytemple.java} 
+  # - { role: binarytemple.java, java_packages: ["java7-jdk"]} 
+  # - { role: binarytemple.java, java_packages: ["java-1.8.0-openjdk"]} 
